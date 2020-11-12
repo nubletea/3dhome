@@ -1,4 +1,5 @@
 ///**** elementlist ****///
+const BOX = document.querySelector('.box');
 const GNV = document.querySelector('.gnv');
 const GNV_LI = document.querySelectorAll('.gnv li');
 const GNV_LI_A = document.querySelectorAll('.gnv li a');
@@ -6,16 +7,21 @@ const GNVBAR = document.querySelector('.gnvbar');
 const CAROUSEL = document.querySelector('.carousel');
 const PANEL = document.querySelectorAll('.panel');
 ///**** click ****////
-const addEventListener = (element_list, fn) => {
+const addEventListener = (element_list) => {
     for(let i=0;i<element_list.length;i++){
-        element_list[i].onclick = fn;
+        element_list[i].addEventListener("click",(e) => {
+            e.preventDefault();
+            CAROUSEL.style.transition='1s';
+            arrows.total=360-i*90;
+            CAROUSEL.style.transform="rotateY("+arrows.total+"deg)";
+        });
     }
 }
 ///**** nav ****////
 const nav = {
     getwidth:0,
     arr:[],
-    for_list:(elmen)=>{
+    for_gnv_arr:(elmen)=>{
         nav.arr=[];
         for(let i=0;i<elmen.length;i++){
             nav.arr.push(elmen[i]);
@@ -28,7 +34,7 @@ const gnv = () => {
         let A_width = GNV_LI_A[i].offsetWidth;
         let GNV_index= nav.arr.indexOf(GNV_LI[i]);
         GNVBAR.style.display='block';
-        nav.for_list(GNV_LI);
+        nav.for_gnv_arr(GNV_LI);
         nav.getwidth=0;
         for(let j=0;j<GNV_index;j++){
             let LI_width = GNV_LI[j].getBoundingClientRect().width;
@@ -40,6 +46,14 @@ const gnv = () => {
     }
     GNV.onmouseleave=function(){
         GNVBAR.style.display='none';
+    }
+}
+///**** 3d panel ****///
+const panel={
+    translateZ:(element) => {
+        for(let i=0;i<element.length;i++){
+            PANEL[i].style.transform="rotateY("+i*90+"deg) translateZ("+BOX.getBoundingClientRect().width/2+"px)";
+        }
     }
 }
 ///**** load ****///
@@ -57,25 +71,40 @@ window.addEventListener("DOMContentLoaded",(e) => {
                 break;
         }
     });
+    panel.translateZ(PANEL);
+    addEventListener(GNV_LI_A);
     gnv();
 });
 ///**** arrow ****///
 const arrows={
-    total:0
+    total:360,
+    is:true
 }
 const arrow = (arrowfn) => {
-    CAROUSEL.style.transition='1s';
-    if(Math.abs(arrows.total)>90*(PANEL.length-2)){
-        arrows.total+=arrowfn;
-        CAROUSEL.style.transform="rotateY("+arrows.total+"deg)";
-        setTimeout(()=>{
-            CAROUSEL.style.transition='none';
-            arrows.total=0;
+    if(arrows.is===true){
+        arrows.is=false;
+        CAROUSEL.style.transition='1s';
+        if(arrows.total>(90*PANEL.length-1)){
+            arrow_callback(360,arrowfn);
+        }else if(arrows.total<=0){
+            arrow_callback(-360,arrowfn);
+        }else{
+            arrows.total=arrows.total+arrowfn;
             CAROUSEL.style.transform="rotateY("+arrows.total+"deg)";
-        },1000);
+        }
     }else{
-        arrows.total+=arrowfn;
-        CAROUSEL.style.transform="rotateY("+arrows.total+"deg)";
+        return;
     }
-    console.log(arrows.total);
+    setTimeout(() => {
+        arrows.is=true;
+    },1000);
+}
+const arrow_callback= (value,arrowfn) => {
+    arrows.total=arrows.total+arrowfn;
+    CAROUSEL.style.transform="rotateY("+arrows.total+"deg)";
+    setTimeout(()=>{
+        CAROUSEL.style.transition='none';
+        arrows.total=arrows.total+value;
+        CAROUSEL.style.transform="rotateY("+arrows.total+"deg)";
+    },1000);
 }
