@@ -79,7 +79,7 @@ nav{width:40%;height:100%;position: relative;}
     width:100%;
     height:100%;
     transform-style: preserve-3d;
-    transform: rotateY(0deg);
+    transform: rotateY(360deg);
     transition:1s;
 }
 .panel{
@@ -139,12 +139,6 @@ nav{width:40%;height:100%;position: relative;}
 .panel_text4_main1{font-size: 4.8rem;margin:0;padding:0;color:red;font-weight:900;}
 .panel_text4_main2{font-size: 5rem;margin:0;padding:0;color:yellow;font-weight:900;}
 .panel_text_box .panel_text{font-size: 10rem;margin:0;padding:0;color:white;}
-/* 3d panel */
-.panel:nth-child(1){transform: rotateY(0deg) translateZ(921px);}
-.panel:nth-child(2){transform: rotateY(90deg) translateZ(921px);}
-.panel:nth-child(3){transform: rotateY(180deg) translateZ(921px);}
-.panel:nth-child(4){transform: rotateY(270deg) translateZ(921px);}
-
 /* arrow_fixed*/
 .arrow{
     position: fixed;
