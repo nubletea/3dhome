@@ -6,14 +6,16 @@ const GNV_LI_A = document.querySelectorAll('.gnv li a');
 const GNVBAR = document.querySelector('.gnvbar');
 const CAROUSEL = document.querySelector('.carousel');
 const PANEL = document.querySelectorAll('.panel');
+const total = {
+    count:0
+}
 ///**** click ****////
 const addEventListener = (element_list) => {
     for(let i=0;i<element_list.length;i++){
         element_list[i].addEventListener("click",(e) => {
             e.preventDefault();
-            CAROUSEL.style.transition='1s';
-            arrows.total=360-i*90;
-            CAROUSEL.style.transform="rotateY("+arrows.total+"deg)";
+            total.count=i;
+            rotate();
         });
     }
 }
@@ -58,13 +60,13 @@ const panel={
 }
 ///**** load ****///
 window.addEventListener("DOMContentLoaded",(e) => {
-    document.querySelector('.arrow').addEventListener('click',(e)=>{
+   document.querySelector('.arrow').addEventListener('click',(e)=>{
         switch (e.target.innerText){
             case 'keyboard_arrow_left':
-                arrow(90);
+                arrow(-1);
                 break;
             case 'keyboard_arrow_right':
-                arrow(-90);
+                arrow(1);
                 break;
             default:
                 new Error("error");
@@ -76,35 +78,17 @@ window.addEventListener("DOMContentLoaded",(e) => {
     gnv();
 });
 ///**** arrow ****///
-const arrows={
-    total:360,
-    is:true
-}
 const arrow = (arrowfn) => {
-    if(arrows.is===true){
-        arrows.is=false;
-        CAROUSEL.style.transition='1s';
-        if(arrows.total>(90*PANEL.length-1)){
-            arrow_callback(360,arrowfn);
-        }else if(arrows.total<=0){
-            arrow_callback(-360,arrowfn);
-        }else{
-            arrows.total=arrows.total+arrowfn;
-            CAROUSEL.style.transform="rotateY("+arrows.total+"deg)";
+        const limit = PANEL.length;
+        let pos = total.count + arrowfn;
+        if (limit == pos) {
+          pos = 0;
+        } else if (pos < 0) {
+          pos = limit - 1;
         }
-    }else{
-        return;
-    }
-    setTimeout(() => {
-        arrows.is=true;
-    },1000);
-}
-const arrow_callback= (value,arrowfn) => {
-    arrows.total=arrows.total+arrowfn;
-    CAROUSEL.style.transform="rotateY("+arrows.total+"deg)";
-    setTimeout(()=>{
-        CAROUSEL.style.transition='none';
-        arrows.total=arrows.total+value;
-        CAROUSEL.style.transform="rotateY("+arrows.total+"deg)";
-    },1000);
-}
+        total.count = pos;
+        rotate();
+};
+const rotate = () => { 
+    CAROUSEL.style.transform="rotateY("+-90*total.count+"deg)"; 
+};
