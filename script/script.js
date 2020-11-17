@@ -13,8 +13,10 @@ const total = {
 const addEventListener = (element_list) => {
     for(let i=0;i<element_list.length;i++){
         element_list[i].addEventListener("click",(e) => {
+            let share = Math.floor(total.count/4);
+            let Remainder = total.count%4;
             e.preventDefault();
-            total.count=i;
+            total.count=(share*4)+Remainder+(i-Remainder);
             rotate();
         });
     }
@@ -79,13 +81,7 @@ window.addEventListener("DOMContentLoaded",(e) => {
 });
 ///**** arrow ****///
 const arrow = (arrowfn) => {
-        const limit = PANEL.length;
         let pos = total.count + arrowfn;
-        if (limit == pos) {
-          pos = 0;
-        } else if (pos < 0) {
-          pos = limit - 1;
-        }
         total.count = pos;
         rotate();
 };
