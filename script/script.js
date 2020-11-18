@@ -60,6 +60,9 @@ const panel={
         }
     }
 }
+const resize = () => {
+    panel.translateZ(PANEL);
+}
 ///**** load ****///
 window.addEventListener("DOMContentLoaded",(e) => {
    document.querySelector('.arrow').addEventListener('click',(e)=>{
@@ -75,8 +78,9 @@ window.addEventListener("DOMContentLoaded",(e) => {
                 break;
         }
     });
-    panel.translateZ(PANEL);
+    resize();
     addEventListener(GNV_LI_A);
+    window.addEventListener('resize',resize);
     gnv();
 });
 ///**** arrow ****///
